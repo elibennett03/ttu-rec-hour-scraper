@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import datetime
 
 
 def scrape():
@@ -44,6 +45,11 @@ def scrape():
             if targetText in p.text:
                 schedule["Updated Time"] = p.text.strip()
                 break
+            
+        #datetime to  confirm correctly timed and pushed json
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        schedule["Current Time"] = current_time
+        
                 
         # Convert to JSON and save to a file
         with open('schedule.json', 'w') as json_file:
