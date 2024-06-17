@@ -1,4 +1,4 @@
-name: Run Scraper
+name: Run Tech Scraper
 
 on:
   schedule:
