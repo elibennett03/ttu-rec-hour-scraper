@@ -30,11 +30,11 @@ jobs:
 
     - name: Commit changes
       run: |
-        git add ttu-rec-hour-scraper/your-json-file.json
+        git add schedule.json
         git commit -m 'Update JSON file with new data'
       continue-on-error: true
 
     - name: Push changes
-      run: git push origin your-branch
+      run: git push
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
