@@ -41,12 +41,10 @@ def scrape():
         #Loop through <p> elements to find when times where last updated
         targetText = 'Updated'
         for p in soup.find_all('p'):
-            print(p.text)
             if targetText in p.text:
                 schedule["Updated Time"] = p.text.strip()
                 break
                 
-
         # Convert to JSON and save to a file
         with open('schedule.json', 'w') as json_file:
             json.dump(schedule, json_file, indent=4)
@@ -57,6 +55,8 @@ def scrape():
         print(f"Request error: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
+        
+    
 
 if __name__ == "__main__":
     scrape()
