@@ -23,7 +23,23 @@
             "Instructor": "Hailey",
             "Location": "Studio 207",
             "Description": "A group fitness experience on a stationary bike! Great for everyone, male, female, conditioned, deconditioned, because YOU control your pace and resistance."
+        },
+        {
+            "Class Name": "Power Lunch",
+            "Day": "Tuesdays 12:10 PM - 12:55 PM",
+            "Time": "",
+            "Instructor": "Ann Marie",
+            "Location": "Studio 250",
+            "Description": "A fun total body strength training workout in a non-intimidating setting! Utilize a variety of equipment (free weights, elastic bands, fitness balls...) and body weight exercises ( squats, lunges, planks...) to tone and strengthen the body. Exercise modifications are always offered and all fitness levels are welcome."
+        },
+        {
+            "Class Name": "Water Aerobics",
+            "Day": "Mondays and Wednesdays",
+            "Time": "5 PM - 6 PM",
+            "Instructor": "Addie",
+            "Location": "Pool",
+            "Description": "Move and have fun in the water to a variety of upbeat music for an invigorating workout. All fitness levels are welcome."
         }
     ],
-    "Current Time": "2024-06-19 08:48:58"
+    "Current Time": "2024-07-13 11:43:30"
 }
