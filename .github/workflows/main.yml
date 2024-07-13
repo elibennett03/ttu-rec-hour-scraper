@@ -35,7 +35,7 @@ jobs:
 
     - name: Commit changes
       run: |
-        git add schedule.json
+        git add schedule.json group_classes.json
         git commit -m 'Update JSON file with new data' || echo "No changes to commit"
       continue-on-error: true
 
