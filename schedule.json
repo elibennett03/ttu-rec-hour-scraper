@@ -1,31 +1,31 @@
 {
     "Building Hours": {
-        "Monday": "6:00 AM - 8:00 PM",
-        "Tuesday": "6:00 AM - 8:00 PM",
-        "Wednesday": "6:00 AM - 8:00 PM",
-        "Thursday": "6:00 AM - 8:00 PM",
-        "Friday": "6:00 AM - 8:00 PM",
-        "Saturday": "9:00 AM - 6:00 PM",
-        "Sunday": "1:00 PM - 8:00 PM"
+        "Monday": "0600 - 2000",
+        "Tuesday": "0600 - 2000",
+        "Wednesday": "0600 - 2000",
+        "Thursday": "0600 - 2000",
+        "Friday": "0600 - 2000",
+        "Saturday": "0900 - 1800",
+        "Sunday": "1300 - 2000"
     },
     "Climbing Wall Hours": {
         "Monday": "CLOSED",
-        "Tuesday": "2:00 PM - 5:00 PM",
-        "Wednesday": "2:00 PM - 5:00 PM",
-        "Thursday": "2:00 PM - 5:00 PM",
-        "Friday": "2:00 PM - 5:00 PM",
+        "Tuesday": "1400 - 1700",
+        "Wednesday": "1400 - 1700",
+        "Thursday": "1400 - 1700",
+        "Friday": "1400 - 1700",
         "Saturday": "CLOSED",
         "Sunday": "CLOSED"
     },
     "Pool and Sauna Hours": {
-        "Monday": "6:00 AM - 11:00 AM / 3:00 PM - 6:00 PM",
-        "Tuesday": "6:00 AM - 11:00 AM / 3:00 PM - 6:00 PM",
-        "Wednesday": "6:00 AM - 11:00 AM / 3:00 PM - 6:00 PM",
-        "Thursday": "6:00 AM - 11:00 AM / 3:00 PM - 6:00 PM",
-        "Friday": "6:00 AM - 11:00 AM / 3:00 PM - 6:00 PM",
+        "Monday": "0600 - 1100 / 1500 - 1800",
+        "Tuesday": "0600 - 1100 / 1500 - 1800",
+        "Wednesday": "0600 - 1100 / 1500 - 1800",
+        "Thursday": "0600 - 1100 / 1500 - 1800",
+        "Friday": "0600 - 1100 / 1500 - 1800",
         "Saturday": "CLOSED",
         "Sunday": "CLOSED"
     },
     "Updated Time": "Updated: 7/8/2024",
-    "Current Time": "2024-07-13 11:43:29"
+    "Current Time": "2024-07-13 14:48:14"
 }

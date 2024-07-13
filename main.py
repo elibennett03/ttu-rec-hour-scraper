@@ -4,6 +4,65 @@ import json
 import datetime
 import re  # Make sure to import the re module
 
+def convert_to_24h(time_str):
+    """
+    Converts a time string from 12-hour format to 24-hour format.
+    
+    Args:
+        time_str (str): The time string in 12-hour format (e.g., '6:00 PM', '6 PM').
+        
+    Returns:
+        int: The time as an integer in 24-hour format (e.g., 1800 for 6:00 PM).
+    """
+    # Normalize the time string
+    time_str = re.sub(r'\s+', ' ', time_str).strip()
+    time_str = re.sub(r'\.\s*', '.', time_str)
+    
+    # Match the time string with a regular expression
+    match = re.match(r'(\d{1,2}):?(\d{2})?\s*([AaPp]\.?[Mm]\.?)', time_str)
+    if not match:
+        raise ValueError(f"Invalid time format: {time_str}")
+
+    hour = int(match.group(1))
+    minute = int(match.group(2)) if match.group(2) else 0
+    period = match.group(3).replace('.', '').upper()
+
+    # Convert to 24-hour format
+    if period == 'AM':
+        if hour == 12:
+            hour = 0  # Midnight case
+    elif period == 'PM':
+        if hour != 12:
+            hour += 12  # PM case (1 PM to 11 PM)
+
+    return hour * 100 + minute
+
+def format_hours_to_int(hours):
+    """
+    Formats hours from 12-hour format to 24-hour format integers.
+    
+    Args:
+        hours (str): The hours string in 12-hour format.
+        
+    Returns:
+        str: The hours string with times converted to 24-hour format integers.
+    """
+    # Handle 'CLOSED' directly
+    if hours.upper() == "CLOSED":
+        return hours
+
+    # Normalize multiple time ranges separated by '/'
+    time_ranges = hours.split('/')
+    normalized_ranges = []
+
+    for time_range in time_ranges:
+        times = time_range.split('-')
+        start_time = convert_to_24h(times[0].strip())
+        end_time = convert_to_24h(times[1].strip())
+        normalized_ranges.append(f"{start_time:04d} - {end_time:04d}")
+
+    return ' / '.join(normalized_ranges)
+
 def scrape():
     hour_url = "https://www.tntech.edu/recreation/hours.php"
     group_url = 'https://www.tntech.edu/recreation/group-classes.php'
@@ -34,9 +93,9 @@ def scrape():
             # Extract and clean data
             if columns[0].text.strip() in days:
                 current_day = columns[0].text.strip()
-                schedule["Building Hours"][current_day] = format_hours(columns[1].text.strip())
-                schedule["Climbing Wall Hours"][current_day] = format_hours(columns[2].text.strip())
-                schedule["Pool and Sauna Hours"][current_day] = format_hours(columns[3].text.strip())
+                schedule["Building Hours"][current_day] = format_hours_to_int(columns[1].text.strip())
+                schedule["Climbing Wall Hours"][current_day] = format_hours_to_int(columns[2].text.strip())
+                schedule["Pool and Sauna Hours"][current_day] = format_hours_to_int(columns[3].text.strip())
             else:
                 day_index += 1
 
@@ -92,7 +151,7 @@ def scrape_classes():
                         if p_tag:
                             # Extract and clean the data
                             strong_tags = p_tag.find_all('strong')
-                            print(strong_tags)  # Debugging output to see the structure
+                             # Debugging output to see the structure
 
                             if len(strong_tags) >= 3:
                                 time_and_day = strong_tags[0].get_text().strip() 
@@ -183,36 +242,7 @@ def clean_description(description, time_and_day, instructor, location):
     description = description.replace('\u2014', '').strip()
     return description
 
-def format_hours(hours):
-    # Handle 'CLOSED' directly
-    if hours.upper() == "CLOSED":
-        return hours
 
-    # Normalize multiple time ranges separated by '/'
-    time_ranges = hours.split('/')
-    normalized_ranges = []
-
-    for time_range in time_ranges:
-        times = time_range.split('-')
-        start_time = normalize_time(times[0].strip())
-        end_time = normalize_time(times[1].strip())
-        normalized_ranges.append(f"{start_time} - {end_time}")
-
-    return ' / '.join(normalized_ranges)
-
-def normalize_time(time):
-    # Remove any extra spaces and periods
-    time = re.sub(r'\s+', ' ', time).strip()
-    time = re.sub(r'\.\s*', '.', time)
-
-    time_pattern = re.compile(r'(\d+)\s*([AaPp]\.?[Mm]\.?)')
-    match = time_pattern.search(time)
-    if match:
-        hour = match.group(1)
-        period = match.group(2).replace('.', '').upper()
-        return f'{hour}:00 {period}'
-    else:
-        raise ValueError(f"Error normalizing time: {time}")
 
 if __name__ == "__main__":
     scrape()
