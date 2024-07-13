@@ -69,55 +69,56 @@ def scrape_classes():
     group_url = 'https://www.tntech.edu/recreation/group-classes.php'
     
     try:
-        # Make a GET request
+        # Make a GET request to the URL
         response = requests.get(group_url)
-        response.raise_for_status()
+        response.raise_for_status()  # Raise an exception for HTTP errors
         
-        # Parse the HTML content
+        # Parse the HTML content with BeautifulSoup
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        classes = []
-        class_names = ["HIIT", "Pilates", "Spin", "Power Lunch", "Water Aerobics"]
+        classes = []  # Initialize an empty list to hold class information
+        class_names = ["HIIT", "Pilates", "Spin", "Power Lunch", "Water Aerobics"]  # List of class names to search for
         
         # Find the specified <div> and get all content within it
         container = soup.find('div', class_='grid-container twoThirdsContainer')
         if container:
-            headings = container.find_all('h4')
+            headings = container.find_all('h4')  # Find all <h4> tags within the container
             
             for h4 in headings:
-                strong_tag = h4.find('strong')
+                strong_tag = h4.find('strong')  # Find the <strong> tag within each <h4>
                 if strong_tag:
-                    class_name = strong_tag.text.replace('›', '').strip()
+                    class_name = strong_tag.text.replace('›', '').strip()  # Extract and clean the class name
                     if class_name in class_names:
-                        p_tag = h4.find_next_sibling('p')
+                        p_tag = h4.find_next_sibling('p')  # Find the next sibling <p> tag
                         if p_tag:
                             # Extract and clean the data
-                            strong_tags = p_tag.find_all('strong')
+                            strong_tags = p_tag.find_all('strong')  # Find all <strong> tags within the <p>
                             if len(strong_tags) >= 3:
-                                time_and_day = strong_tags[0].get_text().strip()
-                                instructor = strong_tags[1].get_text().strip().replace('Instructor: ', '')
-                                location = strong_tags[2].get_text().strip().replace('Location: ', '')
+                                time_and_day = strong_tags[0].get_text().strip()  # Extract and clean time and day
+                                instructor = strong_tags[1].get_text().strip().replace('Instructor: ', '')  # Extract and clean instructor
+                                location = strong_tags[2].get_text().strip().replace('Location: ', '')  # Extract and clean location
 
                                 # Get the description as everything that comes after the last <strong> tag
                                 last_strong_tag = strong_tags[-1]
                                 description = ""
-                                for sibling in last_strong_tag.next_siblings:
+                                for sibling in last_strong_tag.next_siblings:  # Iterate over siblings after the last <strong> tag
                                     if sibling.name is None:  # Text node
-                                        description += sibling.strip()
+                                        description += sibling.strip()  # Add text node to description
                                     else:
-                                        description += sibling.get_text(strip=True)
+                                        description += sibling.get_text(strip=True)  # Add text from other tags to description
                                 
-                                description = ' '.join(description.split())
+                                description = ' '.join(description.split())  # Clean up the description by replacing multiple spaces with a single space
 
                                 # Split time_and_day into separate day and time
                                 if ',' in time_and_day:
-                                    day, time = time_and_day.split(',', 1)
+                                    day, time = time_and_day.split(',', 1)  # Split day and time
                                     day = day.strip()
                                     time = time.strip()
                                 else:
                                     day = time_and_day
                                     time = ""
 
+                                # Create a dictionary for the class information
                                 class_info = {
                                     'Class Name': class_name,
                                     'Day': day,
@@ -137,14 +138,14 @@ def scrape_classes():
             'Current Time': current_time
         }
         
-        # Convert to JSON and save to a file
+        # Convert the schedule dictionary to JSON and save it to a file
         with open('group_classes.json', 'w') as json_file:
             json.dump(schedule, json_file, indent=4)
         
         print("Scraping and JSON conversion completed.")
         
     except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
+        print(f"Request error: {e}")  # Print the request error if it occurs
     except Exception as e:
         print(f"An error occurred: {e}")
 
