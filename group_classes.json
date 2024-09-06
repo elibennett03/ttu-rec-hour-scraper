@@ -19,27 +19,19 @@
         {
             "Class Name": "Spin",
             "Day": "Tuesdays and Thursdays",
-            "Time": "5 PM - 6 PM",
-            "Instructor": "Hailey",
+            "Time": "6:15 PM - 7 PM",
+            "Instructor": "Aaron",
             "Location": "Studio 207",
             "Description": "A group fitness experience on a stationary bike! Great for everyone, male, female, conditioned, deconditioned, because YOU control your pace and resistance."
         },
         {
-            "Class Name": "Power Lunch",
-            "Day": "Tuesdays 12:10 PM - 12:55 PM",
-            "Time": "",
-            "Instructor": "Ann Marie",
-            "Location": "Studio 250",
-            "Description": "A fun total body strength training workout in a non-intimidating setting! Utilize a variety of equipment (free weights, elastic bands, fitness balls...) and body weight exercises ( squats, lunges, planks...) to tone and strengthen the body. Exercise modifications are always offered and all fitness levels are welcome."
-        },
-        {
             "Class Name": "Water Aerobics",
-            "Day": "Mondays and Wednesdays",
+            "Day": "Tuesdays and Thursdays",
             "Time": "5 PM - 6 PM",
-            "Instructor": "Addie",
+            "Instructor": "Barbara",
             "Location": "Pool",
             "Description": "Move and have fun in the water to a variety of upbeat music for an invigorating workout. All fitness levels are welcome."
         }
     ],
-    "Current Time": "2024-09-05 00:41:02"
+    "Current Time": "2024-09-06 00:40:42"
 }
