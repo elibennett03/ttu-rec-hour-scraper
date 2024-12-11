@@ -18,14 +18,14 @@
         "Sunday": "1400 - 1800"
     },
     "Pool and Sauna Hours": {
-        "Monday": "0600 - 1100 / 1500 - 2100",
-        "Tuesday": "0600 - 1100 / 1500 - 2100",
-        "Wednesday": "0600 - 1100 / 1500 - 2100",
-        "Thursday": "0600 - 1100 / 1500 - 2100",
-        "Friday": "0600 - 1100 / 1500 - 1800",
-        "Saturday": "0900 - 1500",
-        "Sunday": "1300 - 1900"
+        "Monday": "0600 - 1100 / 1500 - 1700",
+        "Tuesday": "0600 - 1100 / 1500 - 1700",
+        "Wednesday": "0600 - 1100 / 1500 - 1700",
+        "Thursday": "0600 - 1100 / 1500 - 1700",
+        "Friday": "0600 - 1100 / 1500 - 1700",
+        "Saturday": "Closed",
+        "Sunday": "Closed"
     },
-    "Updated Time": "Updated: 11/25/2024",
-    "Current Time": "2024-12-10 00:50:44"
+    "Updated Time": "Updated: 12/10/2024",
+    "Current Time": "2024-12-11 00:49:22"
 }
