@@ -1,7 +1,31 @@
 {
-    "Building Hours": {},
-    "Climbing Wall Hours": {},
-    "Pool and Sauna Hours": {},
-    "Updated Time": "Updated: 12/12/2024",
-    "Current Time": "2025-01-17 00:42:52"
+    "Building Hours": {
+        "Monday": "0600 - 2300",
+        "Tuesday": "0600 - 2300",
+        "Wednesday": "0600 - 2300",
+        "Thursday": "0600 - 2300",
+        "Friday": "0600 - 2000",
+        "Saturday": "0900 - 2000",
+        "Sunday": "1300 - 2200"
+    },
+    "Climbing Wall Hours": {
+        "Monday": "1700 - 2100",
+        "Tuesday": "1400 - 1800",
+        "Wednesday": "1700 - 2100",
+        "Thursday": "1700 - 2100",
+        "Friday": "1400 - 1800",
+        "Saturday": "Closed",
+        "Sunday": "1400 - 1800"
+    },
+    "Pool and Sauna Hours": {
+        "Monday": "0600 - 1100",
+        "Tuesday": "0600 - 1100",
+        "Wednesday": "0600 - 1100",
+        "Thursday": "0600 - 1100",
+        "Friday": "0600 - 1100",
+        "Saturday": "0900 - 1500",
+        "Sunday": "1300 - 1900"
+    },
+    "Updated Time": "Updated: 1/17/2025",
+    "Current Time": "2025-01-18 00:41:38"
 }
