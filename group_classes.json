@@ -1,37 +1,4 @@
 {
-    "Classes": [
-        {
-            "Class Name": "HIIT",
-            "Day": "Mondays and Wednesdays",
-            "Time": "4:15 PM - 5 PM",
-            "Instructor": "Ashley",
-            "Location": "Studio 203",
-            "Description": "High intensity interval training. Short bursts of intense exercise with low intensity recovery periods. An efficient, effective, and fun form of cardio that boosts heart rate. All levels welcome."
-        },
-        {
-            "Class Name": "Pilates",
-            "Day": "Mondays and Wednesdays",
-            "Time": "5 PM - 6 PM",
-            "Instructor": "Ashley",
-            "Location": "Studio 203",
-            "Description": "A low intensity workout focused on building strength while improving flexibility through controlled body weight movement. All levels are welcome."
-        },
-        {
-            "Class Name": "Spin",
-            "Day": "Tuesdays",
-            "Time": "6:15 PM - 7 PM",
-            "Instructor": "Aaron",
-            "Location": "Studio 207",
-            "Description": "A group fitness experience on a stationary bike! Great for everyone, male, female, conditioned, deconditioned, because YOU control your pace and resistance."
-        },
-        {
-            "Class Name": "Water Aerobics",
-            "Day": "Tuesdays and Thursdays",
-            "Time": "5 PM - 6 PM",
-            "Instructor": "Barbara",
-            "Location": "Pool",
-            "Description": "Move and have fun in the water to a variety of upbeat music for an invigorating workout. All fitness levels are welcome."
-        }
-    ],
-    "Current Time": "2025-01-29 00:05:00"
+    "Classes": [],
+    "Current Time": "2025-01-30 00:04:53"
 }
