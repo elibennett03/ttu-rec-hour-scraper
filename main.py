@@ -12,7 +12,7 @@ def convert_to_24h(time_str):
         time_str (str): The time string in 12-hour format (e.g., '6:00 PM', '6 PM').
         
     Returns:
-        int: The time as an integer in 24-hour format (e.g., 1800 for 6:00 PM).
+        int: The time as an integer in 24-hour format (e.g. 1800 for 6:00 PM).
     """
     # Normalize the time string
     time_str = re.sub(r'\s+', ' ', time_str).strip()
@@ -21,7 +21,7 @@ def convert_to_24h(time_str):
     # Match the time string with a regular expression
     match = re.match(r'(\d{1,2}):?(\d{2})?\s*([AaPp]\.?[Mm]\.?)', time_str)
     if not match:
-        raise ValueError(f"Invalid time format: {time_str}")
+        raise ValueError(f"Invald time format: {time_str}")
 
     hour = int(match.group(1))
     minute = int(match.group(2)) if match.group(2) else 0
