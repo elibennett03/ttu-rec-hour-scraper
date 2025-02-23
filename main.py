@@ -88,16 +88,14 @@ def scrape():
         for row in rows:
             columns = row.find_all('td')
             if len(columns) == 0:
-                continue
+               continue
 
-            # Extract and clean data
-            if columns[0].text.strip() in days:
-                current_day = columns[0].text.strip()
-                schedule["Building Hours"][current_day] = format_hours_to_int(columns[1].text.strip())
-                schedule["Climbing Wall Hours"][current_day] = format_hours_to_int(columns[2].text.strip())
-                schedule["Pool and Sauna Hours"][current_day] = format_hours_to_int(columns[3].text.strip())
-            else:
-                day_index += 1
+        if columns[0].text.strip() in days:
+         current_day = columns[0].text.strip()
+         schedule["Building Hours"][current_day] = format_hours_to_int(columns[1].text.strip())
+         schedule["Climbing Wall Hours"][current_day] = format_hours_to_int(columns[2].text.strip())
+        schedule["Pool and Sauna Hours"][current_day] = format_hours_to_int(columns[3].text.strip())
+
 
         # Loop through <p> elements to find when times were last updated
         updated_time_tag = soup.find('p', string=lambda text: text and 'Updated' in text)
