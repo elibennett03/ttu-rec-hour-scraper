@@ -100,11 +100,9 @@ def scrape():
                 day_index += 1
 
         # Loop through <p> elements to find when times were last updated
-        targetText = 'Updated'
-        for p in soup.find_all('p'):
-            if targetText in p.text:
-                schedule["Updated Time"] = p.text.strip()
-                break
+        updated_time_tag = soup.find('p', string=lambda text: text and 'Updated' in text)
+        if updated_time_tag:
+            schedule["Updated Time"] = updated_time_tag.text.strip()
 
         # datetime to confirm correctly timed and pushed json
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -114,7 +112,7 @@ def scrape():
         with open('schedule.json', 'w') as json_file:
             json.dump(schedule, json_file, indent=4)
 
-        print("Scraping and JSON conversion completed.")
+        print("Scraping and JSON conversion completed")
 
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
