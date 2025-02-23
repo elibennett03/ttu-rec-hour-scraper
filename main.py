@@ -129,7 +129,8 @@ def scrape_classes():
         soup = BeautifulSoup(response.content, 'html.parser')
 
         classes = []  # Initialize an empty list to hold class information
-        class_names = ["HIIT", "Pilates", "Spin", "Power Lunch", "Water Aerobics"]  # List of class names to search for
+        class_names = [strong_tag.text.replace('›', '').strip()
+               for strong_tag in soup.find_all('strong')]
 
         # Find the specified <div> and get all content within it
         container = soup.find('div', class_='grid-container twoThirdsContainer')
