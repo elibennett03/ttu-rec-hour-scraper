@@ -12,7 +12,7 @@ def convert_to_24h(time_str):
         time_str (str): The time string in 12-hour format (e.g., '6:00 PM', '6 PM').
         
     Returns:
-        int: The time as an integer in 24-hour format (e.g., 1800 for 6:00 PM).
+        int: The time as an integer in 24-hour format (e.g. 1800 for 6:00 PM).
     """
     # Normalize the time string
     time_str = re.sub(r'\s+', ' ', time_str).strip()
@@ -21,7 +21,7 @@ def convert_to_24h(time_str):
     # Match the time string with a regular expression
     match = re.match(r'(\d{1,2}):?(\d{2})?\s*([AaPp]\.?[Mm]\.?)', time_str)
     if not match:
-        raise ValueError(f"Invalid time format: {time_str}")
+        raise ValueError(f"Invald time format: {time_str}")
 
     hour = int(match.group(1))
     minute = int(match.group(2)) if match.group(2) else 0
@@ -88,23 +88,19 @@ def scrape():
         for row in rows:
             columns = row.find_all('td')
             if len(columns) == 0:
-                continue
+               continue
 
-            # Extract and clean data
-            if columns[0].text.strip() in days:
-                current_day = columns[0].text.strip()
-                schedule["Building Hours"][current_day] = format_hours_to_int(columns[1].text.strip())
-                schedule["Climbing Wall Hours"][current_day] = format_hours_to_int(columns[2].text.strip())
-                schedule["Pool and Sauna Hours"][current_day] = format_hours_to_int(columns[3].text.strip())
-            else:
-                day_index += 1
+        if columns[0].text.strip() in days:
+         current_day = columns[0].text.strip()
+         schedule["Building Hours"][current_day] = format_hours_to_int(columns[1].text.strip())
+         schedule["Climbing Wall Hours"][current_day] = format_hours_to_int(columns[2].text.strip())
+        schedule["Pool and Sauna Hours"][current_day] = format_hours_to_int(columns[3].text.strip())
+
 
         # Loop through <p> elements to find when times were last updated
-        targetText = 'Updated'
-        for p in soup.find_all('p'):
-            if targetText in p.text:
-                schedule["Updated Time"] = p.text.strip()
-                break
+        updated_time_tag = soup.find('p', string=lambda text: text and 'Updated' in text)
+        if updated_time_tag:
+            schedule["Updated Time"] = updated_time_tag.text.strip()
 
         # datetime to confirm correctly timed and pushed json
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -114,7 +110,7 @@ def scrape():
         with open('schedule.json', 'w') as json_file:
             json.dump(schedule, json_file, indent=4)
 
-        print("Scraping and JSON conversion completed.")
+        print("Scraping and JSON conversion completed")
 
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
@@ -133,7 +129,8 @@ def scrape_classes():
         soup = BeautifulSoup(response.content, 'html.parser')
 
         classes = []  # Initialize an empty list to hold class information
-        class_names = ["HIIT", "Pilates", "Spin", "Power Lunch", "Water Aerobics"]  # List of class names to search for
+        class_names = [strong_tag.text.replace('›', '').strip()
+               for strong_tag in soup.find_all('strong')]
 
         # Find the specified <div> and get all content within it
         container = soup.find('div', class_='grid-container twoThirdsContainer')
