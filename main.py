@@ -1,249 +1,330 @@
+import datetime
+import json
+import logging
+import re
+
 import requests
 from bs4 import BeautifulSoup
-import json
-import datetime
-import re  # Make sure to import the re module
 
-def convert_to_24h(time_str):
-    """
-    Converts a time string from 12-hour format to 24-hour format.
-    
-    Args:
-        time_str (str): The time string in 12-hour format (e.g., '6:00 PM', '6 PM').
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger('rec_scraper')
+
+# Constants
+HOURS_URL = "https://www.tntech.edu/recreation/hours.php"
+CLASSES_URL = "https://www.tntech.edu/recreation/group-classes.php"
+DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+CLASS_NAMES = ["HIIT", "Pilates", "Spin", "Power Lunch", "Water Aerobics", "Dance Aerobics"]
+
+class TimeConverter:
+    @staticmethod
+    def convert_to_24h(time_str):
+        """
+        Converts a time string from 12-hour format to 24-hour format.
         
-    Returns:
-        int: The time as an integer in 24-hour format (e.g., 1800 for 6:00 PM).
-    """
-    # Normalize the time string
-    time_str = re.sub(r'\s+', ' ', time_str).strip()
-    time_str = re.sub(r'\.\s*', '.', time_str)
-    
-    # Match the time string with a regular expression
-    match = re.match(r'(\d{1,2}):?(\d{2})?\s*([AaPp]\.?[Mm]\.?)', time_str)
-    if not match:
-        raise ValueError(f"Invalid time format: {time_str}")
-
-    hour = int(match.group(1))
-    minute = int(match.group(2)) if match.group(2) else 0
-    period = match.group(3).replace('.', '').upper()
-
-    # Convert to 24-hour format
-    if period == 'AM':
-        if hour == 12:
-            hour = 0  # Midnight case
-    elif period == 'PM':
-        if hour != 12:
-            hour += 12  # PM case (1 PM to 11 PM)
-
-    return hour * 100 + minute
-
-def format_hours_to_int(hours):
-    """
-    Formats hours from 12-hour format to 24-hour format integers.
-    
-    Args:
-        hours (str): The hours string in 12-hour format.
+        Args:
+            time_str (str): The time string in 12-hour format (e.g., '6:00 PM', '6 PM').
+            
+        Returns:
+            int: The time as an integer in 24-hour format (e.g., 1800 for 6:00 PM).
+        """
+        # Normalize the time string
+        time_str = re.sub(r'\s+', ' ', time_str).strip()
+        time_str = re.sub(r'\.\s*', '.', time_str)
         
-    Returns:
-        str: The hours string with times converted to 24-hour format integers.
-    """
-    # Handle 'CLOSED' directly
-    if hours.upper() == "CLOSED":
-        return hours
+        # Match the time string with a regular expression
+        match = re.match(r'(\d{1,2}):?(\d{2})?\s*([AaPp]\.?[Mm]\.?)', time_str)
+        if not match:
+            raise ValueError(f"Invalid time format: {time_str}")
 
-    # Normalize multiple time ranges separated by '/'
-    time_ranges = hours.split('/')
-    normalized_ranges = []
+        hour = int(match.group(1))
+        minute = int(match.group(2)) if match.group(2) else 0
+        period = match.group(3).replace('.', '').upper()
 
-    for time_range in time_ranges:
-        times = time_range.split('-')
-        start_time = convert_to_24h(times[0].strip())
-        end_time = convert_to_24h(times[1].strip())
-        normalized_ranges.append(f"{start_time:04d} - {end_time:04d}")
+        # Convert to 24-hour format
+        if period == 'AM':
+            if hour == 12:
+                hour = 0  # Midnight case
+        elif period == 'PM':
+            if hour != 12:
+                hour += 12  # PM case (1 PM to 11 PM)
 
-    return ' / '.join(normalized_ranges)
+        return hour * 100 + minute
 
-def scrape():
-    hour_url = "https://www.tntech.edu/recreation/hours.php"
-    group_url = 'https://www.tntech.edu/recreation/group-classes.php'
+    @staticmethod
+    def format_hours_to_int(hours):
+        """
+        Formats hours from 12-hour format to 24-hour format integers.
+        
+        Args:
+            hours (str): The hours string in 12-hour format.
+            
+        Returns:
+            str: The hours string with times converted to 24-hour format integers.
+        """
+        # Handle 'CLOSED' directly
+        if hours.upper() == "CLOSED":
+            return hours
 
-    try:
-        # Make a GET request
-        response = requests.get(hour_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        # Normalize multiple time ranges separated by '/'
+        time_ranges = hours.split('/')
+        normalized_ranges = []
 
-        # Parse the HTML content
-        soup = BeautifulSoup(response.content, 'html.parser')
+        for time_range in time_ranges:
+            times = time_range.split('-')
+            if len(times) != 2:
+                logger.warning(f"Unexpected time range format: {time_range}")
+                continue
+                
+            start_time = TimeConverter.convert_to_24h(times[0].strip())
+            end_time = TimeConverter.convert_to_24h(times[1].strip())
+            normalized_ranges.append(f"{start_time:04d} - {end_time:04d}")
 
-        # Extract data
-        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        return ' / '.join(normalized_ranges)
+
+class RecreationScraper:
+    def __init__(self):
+        self.time_converter = TimeConverter()
+    
+    def _save_to_json(self, data, filename):
+        """Save data dictionary to a JSON file"""
+        try:
+            with open(filename, 'w') as json_file:
+                json.dump(data, json_file, indent=4)
+            logger.info(f"Successfully saved data to {filename}")
+        except Exception as e:
+            logger.error(f"Failed to save JSON file {filename}: {e}")
+    
+    def _make_request(self, url):
+        """Make HTTP request and return BeautifulSoup object"""
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            return BeautifulSoup(response.content, 'html.parser')
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request failed for {url}: {e}")
+            return None
+    
+    def _get_current_timestamp(self):
+        """Return current timestamp in the standard format"""
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    def scrape_hours(self):
+        """Scrape recreation center hours and save to JSON file"""
+        soup = self._make_request(HOURS_URL)
+        if not soup:
+            return False
+        
         schedule = {
             "Building Hours": {},
             "Climbing Wall Hours": {},
             "Pool and Sauna Hours": {}
         }
 
-        rows = soup.find_all('tr')
-        day_index = 0
-        for row in rows:
-            columns = row.find_all('td')
-            if len(columns) == 0:
-                continue
+        try:
+            # Find and process the schedule table
+            rows = soup.find_all('tr')
+            for row in rows:
+                columns = row.find_all('td')
+                if len(columns) == 0:
+                    continue
 
-            # Extract and clean data
-            if columns[0].text.strip() in days:
-                current_day = columns[0].text.strip()
-                schedule["Building Hours"][current_day] = format_hours_to_int(columns[1].text.strip())
-                schedule["Climbing Wall Hours"][current_day] = format_hours_to_int(columns[2].text.strip())
-                schedule["Pool and Sauna Hours"][current_day] = format_hours_to_int(columns[3].text.strip())
+                # Extract and clean data
+                if columns[0].text.strip() in DAYS_OF_WEEK:
+                    current_day = columns[0].text.strip()
+                    schedule["Building Hours"][current_day] = TimeConverter.format_hours_to_int(columns[1].text.strip())
+                    schedule["Climbing Wall Hours"][current_day] = TimeConverter.format_hours_to_int(columns[2].text.strip())
+                    schedule["Pool and Sauna Hours"][current_day] = TimeConverter.format_hours_to_int(columns[3].text.strip())
+
+            # Find update time information
+            for p in soup.find_all('p'):
+                if 'Updated' in p.text:
+                    schedule["Updated Time"] = p.text.strip()
+                    break
+
+            # Add current timestamp
+            schedule["Current Time"] = self._get_current_timestamp()
+            
+            # Save results to JSON
+            self._save_to_json(schedule, 'schedule.json')
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error scraping hours: {e}")
+            return False
+    
+    def _clean_text(self, text):
+        """Clean text by removing special characters and extra spaces"""
+        if text:
+            text = text.replace('\u2014', '').strip()
+        return text
+    
+    def _extract_class_details(self, p_tag):
+        """Extract class details from paragraph tag"""
+        strong_tags = p_tag.find_all('strong')
+        
+        time_and_day = None
+        instructor = None
+        location = None
+        
+        if len(strong_tags) >= 3:
+            time_and_day = strong_tags[0].get_text().strip()
+            instructor = strong_tags[1].get_text().strip().replace('Instructor: ', '')
+            location = strong_tags[2].get_text().strip().replace('Location: ', '')
+        elif len(strong_tags) == 1:
+            full_details = strong_tags[0].get_text().strip()
+            
+            if 'Instructor:' in full_details and 'Location:' in full_details:
+                time_and_day, instructor_part = full_details.split('Instructor:', 1)
+                instructor, location_part = instructor_part.split('Location:', 1)
+                location = location_part.split('<br/>')[0].strip()
+                
+                time_and_day = time_and_day.strip()
+                instructor = instructor.strip()
+                location = location.strip()
             else:
-                day_index += 1
-
-        # Loop through <p> elements to find when times were last updated
-        targetText = 'Updated'
-        for p in soup.find_all('p'):
-            if targetText in p.text:
-                schedule["Updated Time"] = p.text.strip()
-                break
-
-        # datetime to confirm correctly timed and pushed json
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        schedule["Current Time"] = current_time
-
-        # Convert to JSON and save to a file
-        with open('schedule.json', 'w') as json_file:
-            json.dump(schedule, json_file, indent=4)
-
-        print("Scraping and JSON conversion completed.")
-
-    except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-def scrape_classes():
-    group_url = 'https://www.tntech.edu/recreation/group-classes.php'
-
-    try:
-        # Make a GET request to the URL
-        response = requests.get(group_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-
-        # Parse the HTML content with BeautifulSoup
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        classes = []  # Initialize an empty list to hold class information
-        class_names = ["HIIT", "Pilates", "Spin", "Power Lunch", "Water Aerobics"]  # List of class names to search for
-
-        # Find the specified <div> and get all content within it
-        container = soup.find('div', class_='grid-container twoThirdsContainer')
-        if container:
-            headings = container.find_all('h4')  # Find all <h4> tags within the container
-
-            for h4 in headings:
-                strong_tag = h4.find('strong')  # Find the <strong> tag within each <h4>
-                if strong_tag:
-                    class_name = strong_tag.text.replace('›', '').strip()
-                    # Extract and clean the class name
-                    if class_name in class_names:
-                        
-                        p_tag = h4.find_next_sibling('p')
-                        if p_tag:
-                            # Extract and clean the data
-                            strong_tags = p_tag.find_all('strong')
-                             # Debugging output to see the structure
-
-                            if len(strong_tags) >= 3:
-                                time_and_day = strong_tags[0].get_text().strip() 
-                                instructor = strong_tags[1].get_text().strip().replace('Instructor: ', '')  # Extract and clean instructor
-                                location = strong_tags[2].get_text().strip().replace('Location: ', '')  # Extract and clean location
-                            elif len(strong_tags) == 1:
-                                full_details = strong_tags[0].get_text().strip()
-                                time_and_day, instructor, location = None, None, None
-
-                                if 'Instructor:' in full_details and 'Location:' in full_details:
-                                    time_and_day, instructor_part = full_details.split('Instructor:', 1)
-                                    instructor, location_part = instructor_part.split('Location:', 1)
-                                    location = location_part.split('<br/>')[0].strip()
-
-                                    time_and_day = time_and_day.strip()
-                                    instructor = instructor.strip()
-                                    location = location.strip()
-                            else:
-                                continue
-
-                            # Handle descriptions
-                            description = ""
-                            for sibling in p_tag.stripped_strings:
-                                if sibling not in time_and_day and sibling not in instructor and sibling not in location:
-                                    description += f"{sibling} "
-
-                            description = ' '.join(description.split())  # Clean up the description by replacing multiple spaces with a single space
-
-                            # Clean all fields from redundant information
-                            time_and_day = clean_field(time_and_day)
-                            instructor = clean_field(instructor)
-                            location = clean_field(location)
-                            description = clean_description(description, time_and_day, instructor, location)
-
-                            # Split time_and_day into separate day and time
-                            if ',' in time_and_day:
-                                day, time = time_and_day.split(',', 1)  # Split day and time
-                                day = day.strip()
-                                time = time.strip()
-                            else:
-                                day = time_and_day
-                                time = ""
-
-                            # Create a dictionary for the class information
-                            class_info = {
-                                'Class Name': class_name,
-                                'Day': day,
-                                'Time': time,
-                                'Instructor': instructor,
-                                'Location': location,
-                                'Description': description
-                            }
-                            classes.append(class_info)
-
-        # Get the current time for confirmation
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        # Create a schedule dictionary
-        schedule = {
-            'Classes': classes,
-            'Current Time': current_time
+                return None
+        else:
+            return None
+            
+        # Extract description
+        description = ""
+        for sibling in p_tag.stripped_strings:
+            if (sibling not in time_and_day and 
+                sibling not in instructor and 
+                sibling not in location):
+                description += f"{sibling} "
+                
+        description = ' '.join(description.split())
+        
+        # Clean all fields
+        time_and_day = self._clean_text(time_and_day)
+        instructor = self._clean_text(instructor)
+        location = self._clean_text(location)
+        
+        # Clean description by removing redundant text
+        if time_and_day:
+            description = description.replace(time_and_day, '').strip()
+        if instructor:
+            description = description.replace(f"Instructor: {instructor}", '').strip()
+        if location:
+            description = description.replace(f"Location: {location}", '').strip()
+        description = self._clean_text(description)
+        
+        # Split time_and_day into day and time
+        day = time_and_day
+        time = ""
+        if ',' in time_and_day:
+            day, time = time_and_day.split(',', 1)
+            day = day.strip()
+            time = time.strip()
+            
+        return {
+            'Day': day,
+            'Time': time,
+            'Instructor': instructor,
+            'Location': location,
+            'Description': description
         }
+    
+    def scrape_classes(self):
+        """Scrape group fitness classes dynamically from structured HTML and save to JSON file."""
+        soup = self._make_request(CLASSES_URL)
+        if not soup:
+            return False
 
-        # Convert the schedule dictionary to JSON and save it to a file
-        with open('group_classes.json', 'w') as json_file:
-            json.dump(schedule, json_file, indent=4)
+        classes = []
+        try:
+            # Locate the correct container by finding the one that contains <h4> tags
+            correct_container = None
+            for container in soup.find_all('div', class_='eagleContent'):
+                if container.find('h4'):
+                    correct_container = container
+                    break
 
-        print("Scraping and JSON conversion completed.")
+            if not correct_container:
+                logger.warning("Could not find the correct container for group classes")
+                return False
 
-    except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")  # Print the request error if it occurs
-    except Exception as e:
-        print(f"An error occurred: {e}")
+            # Find all class headings (h4)
+            for h4 in correct_container.find_all('h4'):
+                strong_tag = h4.find('strong')
+                if not strong_tag:
+                    continue
 
-def clean_field(field):
-    if field:
-        field = field.replace('\u2014', '').strip()
-    return field
+                # Extract class name and clean it
+                class_name = strong_tag.text.replace('›', '').strip()
+                
+                # Find the next <p> tag containing details
+                p_tag = h4.find_next_sibling('p')
+                if not p_tag:
+                    continue
 
-def clean_description(description, time_and_day, instructor, location):
-    if time_and_day:
-        description = description.replace(time_and_day, '').strip()
-    if instructor:
-        description = description.replace(f"Instructor: {instructor}", '').strip()
-    if location:
-        description = description.replace(f"Location: {location}", '').strip()
-    # Remove any leading or trailing special characters like em dash (\u2014)
-    description = description.replace('\u2014', '').strip()
-    return description
+                # Extract time, instructor, and location details
+                details = p_tag.find_all('strong')
+                time_and_day, instructor, location = None, None, None
 
+                if len(details) >= 3:
+                    time_and_day = details[0].text.strip()
+                    instructor = details[1].text.strip().replace('Instructor: ', '')
+                    location = details[2].text.strip().replace('Location: ', '')
+                
+                # Extract description (remaining text in <p>)
+                description = p_tag.get_text(" ", strip=True)
+                description = description.replace(time_and_day, '').replace(instructor, '').replace(location, '').strip()
+                
+                # Split time_and_day into separate day and time
+                if time_and_day and ',' in time_and_day:
+                    day, time = map(str.strip, time_and_day.split(',', 1))
+                else:
+                    day, time = time_and_day, ""
+
+                # Store class data
+                class_info = {
+                    'Class Name': class_name,
+                    'Day': day,
+                    'Time': time,
+                    'Instructor': instructor,
+                    'Location': location,
+                    'Description': description
+                }
+                classes.append(class_info)
+
+            # Save to JSON
+            schedule = {
+                'Classes': classes,
+                'Current Time': self._get_current_timestamp()
+            }
+            self._save_to_json(schedule, 'group_classes.json')
+            return True
+
+        except Exception as e:
+            logger.error(f"Error scraping classes: {e}")
+            return False
+
+
+
+
+
+def main():
+    """Main function to run the scraper"""
+    scraper = RecreationScraper()
+    
+    logger.info("Starting to scrape recreation center hours...")
+    if scraper.scrape_hours():
+        logger.info("Successfully scraped recreation center hours")
+    else:
+        logger.error("Failed to scrape recreation center hours")
+    
+    logger.info("Starting to scrape group fitness classes...")
+    if scraper.scrape_classes():
+        logger.info("Successfully scraped group fitness classes")
+    else:
+        logger.error("Failed to scrape group fitness classes")
 
 
 if __name__ == "__main__":
-    scrape()
-    scrape_classes()
+    main()
