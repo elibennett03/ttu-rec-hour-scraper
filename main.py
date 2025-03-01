@@ -32,17 +32,17 @@ class TimeConverter:
             int: The time as an integer in 24-hour format (e.g., 1800 for 6:00 PM).
         """
         # Normalize the time string
+        time_str = re.sub(r'[^\w\s:APMapm-]', '', time_str)  # Remove unexpected characters
         time_str = re.sub(r'\s+', ' ', time_str).strip()
-        time_str = re.sub(r'\.\s*', '.', time_str)
         
         # Match the time string with a regular expression
-        match = re.match(r'(\d{1,2}):?(\d{2})?\s*([AaPp]\.?[Mm]\.?)', time_str)
+        match = re.match(r'(?i)(\d{1,2}):?(\d{2})?\s*([APM]+)', time_str)
         if not match:
             raise ValueError(f"Invalid time format: {time_str}")
 
         hour = int(match.group(1))
         minute = int(match.group(2)) if match.group(2) else 0
-        period = match.group(3).replace('.', '').upper()
+        period = match.group(3).upper()
 
         # Convert to 24-hour format
         if period == 'AM':
@@ -63,27 +63,34 @@ class TimeConverter:
             hours (str): The hours string in 12-hour format.
             
         Returns:
-            str: The hours string with times converted to 24-hour format integers.
+            list: A list of time ranges with times converted to 24-hour format.
         """
         # Handle 'CLOSED' directly
         if hours.upper() == "CLOSED":
-            return hours
+            return []
 
-        # Normalize multiple time ranges separated by '/'
-        time_ranges = hours.split('/')
+        # Ensure proper spacing if times are concatenated (e.g., "6 AM - 11 AM3 PM - 9 PM")
+        hours = re.sub(r'(?<=[APM])(?=\d)', ' ', hours)
+        
+        # Normalize multiple time ranges separated by '/' or newlines
+        time_ranges = re.split(r'[\n/]+', hours)
         normalized_ranges = []
 
         for time_range in time_ranges:
-            times = time_range.split('-')
-            if len(times) != 2:
-                logger.warning(f"Unexpected time range format: {time_range}")
-                continue
-                
-            start_time = TimeConverter.convert_to_24h(times[0].strip())
-            end_time = TimeConverter.convert_to_24h(times[1].strip())
-            normalized_ranges.append(f"{start_time:04d} - {end_time:04d}")
+            # Ensure valid format before splitting
+            times = re.findall(r'\d{1,2} (?:AM|PM) - \d{1,2} (?:AM|PM)', time_range)
+            
+            for time in times:
+                try:
+                    start, end = time.split('-')
+                    start_time = TimeConverter.convert_to_24h(start.strip())
+                    end_time = TimeConverter.convert_to_24h(end.strip())
+                    normalized_ranges.append(f"{start_time:04d} - {end_time:04d}")
+                except ValueError:
+                    logger.warning(f"Skipping invalid time range: {time}")
+                    continue
 
-        return ' / '.join(normalized_ranges)
+        return normalized_ranges
 
 class RecreationScraper:
     def __init__(self):
@@ -121,8 +128,7 @@ class RecreationScraper:
         schedule = {
             "Building Hours": {},
             "Climbing Wall Hours": {},
-            "Pool and Sauna Hours": {},
-            "Outdoor Equipment Rental Desk": {},
+            "Pool and Sauna Hours": {}
         }
 
         try:
@@ -137,19 +143,6 @@ class RecreationScraper:
                 if columns[0].text.strip() in DAYS_OF_WEEK:
                     current_day = columns[0].text.strip()
                     
-                    # Ensure multiple time ranges are combined correctly
-                    # schedule["Building Hours"][current_day] = " / ".join(
-                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[1].text.split('\n') if time.strip()]
-                    # )
-                    # schedule["Climbing Wall Hours"][current_day] = " / ".join(
-                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[2].text.split('\n') if time.strip()]
-                    # )
-                    # schedule["Pool and Sauna Hours"][current_day] = " / ".join(
-                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[3].text.split('\n') if time.strip()]
-                    # )
-                    # schedule["Outdoor Equipment Rental Desk"][current_day] = " / ".join(
-                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[4].text.split('\n') if time.strip()]
-                    # )
                     def process_time_column(column_text):
                         times = [time.strip() for time in column_text.split('\n') if time.strip()]
                         formatted_times = []
@@ -159,12 +152,11 @@ class RecreationScraper:
                             except ValueError:
                                 logger.warning(f"Unexpected time range format: {time}")
                                 continue
-                        return " / ".join(formatted_times) if formatted_times else "Closed"
-                
+                        return formatted_times  # Store as a list
+                    
                     schedule["Building Hours"][current_day] = process_time_column(columns[1].text)
                     schedule["Climbing Wall Hours"][current_day] = process_time_column(columns[2].text)
                     schedule["Pool and Sauna Hours"][current_day] = process_time_column(columns[3].text)
-                    schedule["Outdoor Equipment Rental Desk"][current_day] = process_time_column(columns[4].text)
 
             # Find update time information
             for p in soup.find_all('p'):
@@ -182,6 +174,7 @@ class RecreationScraper:
         except Exception as e:
             logger.error(f"Error scraping hours: {e}")
             return False
+
     
     def _clean_text(self, text):
         """Clean text by removing special characters and extra spaces"""
