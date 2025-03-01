@@ -1,4 +1,45 @@
 {
-    "Classes": [],
-    "Current Time": "2025-03-01 00:05:55"
+    "Classes": [
+        {
+            "Day": "Mondays and Wednesdays",
+            "Time": "4:15 PM - 5 PM",
+            "Instructor": "Ashley",
+            "Location": "Studio 203",
+            "Description": "High intensity interval training. Short bursts of intense exercise with low intensity recovery periods. An efficient, effective, and fun form of cardio that boosts heart rate. All levels welcome.",
+            "Class Name": "HIIT"
+        },
+        {
+            "Day": "Mondays and Wednesdays",
+            "Time": "5 PM - 6 PM",
+            "Instructor": "Ashley",
+            "Location": "Studio 203",
+            "Description": "A low intensity workout focused on building strength while improving flexibility through controlled body weight movement. All levels are welcome.",
+            "Class Name": "Pilates"
+        },
+        {
+            "Day": "Tuesdays",
+            "Time": "6:15 PM - 7 PM",
+            "Instructor": "Aaron",
+            "Location": "Studio 207",
+            "Description": "A group fitness experience on a stationary bike! Great for everyone, male, female, conditioned, deconditioned, because YOU control your pace and resistance.",
+            "Class Name": "Spin"
+        },
+        {
+            "Day": "Tuesdays and Thursdays",
+            "Time": "5 PM - 6 PM",
+            "Instructor": "Barbara",
+            "Location": "Pool",
+            "Description": "Move and have fun in the water to a variety of upbeat music for an invigorating workout. All fitness levels are welcome.",
+            "Class Name": "Water Aerobics"
+        },
+        {
+            "Day": "Thursdays",
+            "Time": "4 PM - 5 PM",
+            "Instructor": "Maggie",
+            "Location": "Studio 203",
+            "Description": "A high-energy dance fitness program that combines Latin and international music with easy-to-follow dance moves. A great way to get in shape while having fun!",
+            "Class Name": "Dance Aerobics"
+        }
+    ],
+    "Current Time": "2025-03-01 10:05:21"
 }

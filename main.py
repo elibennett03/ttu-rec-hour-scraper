@@ -121,7 +121,8 @@ class RecreationScraper:
         schedule = {
             "Building Hours": {},
             "Climbing Wall Hours": {},
-            "Pool and Sauna Hours": {}
+            "Pool and Sauna Hours": {},
+            "Outdoor Equipment Rental Desk": {},
         }
 
         try:
@@ -135,9 +136,35 @@ class RecreationScraper:
                 # Extract and clean data
                 if columns[0].text.strip() in DAYS_OF_WEEK:
                     current_day = columns[0].text.strip()
-                    schedule["Building Hours"][current_day] = TimeConverter.format_hours_to_int(columns[1].text.strip())
-                    schedule["Climbing Wall Hours"][current_day] = TimeConverter.format_hours_to_int(columns[2].text.strip())
-                    schedule["Pool and Sauna Hours"][current_day] = TimeConverter.format_hours_to_int(columns[3].text.strip())
+                    
+                    # Ensure multiple time ranges are combined correctly
+                    # schedule["Building Hours"][current_day] = " / ".join(
+                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[1].text.split('\n') if time.strip()]
+                    # )
+                    # schedule["Climbing Wall Hours"][current_day] = " / ".join(
+                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[2].text.split('\n') if time.strip()]
+                    # )
+                    # schedule["Pool and Sauna Hours"][current_day] = " / ".join(
+                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[3].text.split('\n') if time.strip()]
+                    # )
+                    # schedule["Outdoor Equipment Rental Desk"][current_day] = " / ".join(
+                    #     [TimeConverter.format_hours_to_int(time.strip()) for time in columns[4].text.split('\n') if time.strip()]
+                    # )
+                    def process_time_column(column_text):
+                        times = [time.strip() for time in column_text.split('\n') if time.strip()]
+                        formatted_times = []
+                        for time in times:
+                            try:
+                                formatted_times.append(TimeConverter.format_hours_to_int(time))
+                            except ValueError:
+                                logger.warning(f"Unexpected time range format: {time}")
+                                continue
+                        return " / ".join(formatted_times) if formatted_times else "Closed"
+                
+                    schedule["Building Hours"][current_day] = process_time_column(columns[1].text)
+                    schedule["Climbing Wall Hours"][current_day] = process_time_column(columns[2].text)
+                    schedule["Pool and Sauna Hours"][current_day] = process_time_column(columns[3].text)
+                    schedule["Outdoor Equipment Rental Desk"][current_day] = process_time_column(columns[4].text)
 
             # Find update time information
             for p in soup.find_all('p'):
@@ -165,63 +192,37 @@ class RecreationScraper:
     def _extract_class_details(self, p_tag):
         """Extract class details from paragraph tag"""
         strong_tags = p_tag.find_all('strong')
+
+        time_and_day = strong_tags[0].get_text(strip=True) if len(strong_tags) >= 1 else ""
+        instructor = strong_tags[1].get_text(strip=True).replace('Instructor: ', '').strip() if len(strong_tags) >= 2 else ""
+        location = strong_tags[2].get_text(strip=True).replace('Location: ', '').strip() if len(strong_tags) >= 3 else ""
         
-        time_and_day = None
-        instructor = None
-        location = None
+        # Ensure time is correctly separated from instructor and location
+        if "Instructor:" in time_and_day:
+            time_and_day, instructor = time_and_day.split("Instructor:", 1)
+            instructor = instructor.strip()
+        if "Location:" in instructor:
+            instructor, location = instructor.split("Location:", 1)
+            location = location.strip()
         
-        if len(strong_tags) >= 3:
-            time_and_day = strong_tags[0].get_text().strip()
-            instructor = strong_tags[1].get_text().strip().replace('Instructor: ', '')
-            location = strong_tags[2].get_text().strip().replace('Location: ', '')
-        elif len(strong_tags) == 1:
-            full_details = strong_tags[0].get_text().strip()
-            
-            if 'Instructor:' in full_details and 'Location:' in full_details:
-                time_and_day, instructor_part = full_details.split('Instructor:', 1)
-                instructor, location_part = instructor_part.split('Location:', 1)
-                location = location_part.split('<br/>')[0].strip()
-                
-                time_and_day = time_and_day.strip()
-                instructor = instructor.strip()
-                location = location.strip()
-            else:
-                return None
+        # Remove any lingering dashes or unwanted characters
+        time_and_day = re.sub(r'\s*\u2014\s*', '', time_and_day).strip()
+        instructor = re.sub(r'\s*\u2014\s*', '', instructor).strip()
+        location = re.sub(r'\s*\u2014\s*', '', location).strip()
+        
+        # Extract description (remaining text in <p>)
+        description = p_tag.get_text(" ", strip=True)
+        description = description.replace(time_and_day, '').replace(instructor, '').replace(location, '').strip()
+        description = description.replace("Instructor:", '').replace("Location:", '').strip()
+        description = re.sub(r'\s*\u2014\s*', '', description).strip()
+        description = re.sub(r'\s+', ' ', description).strip()
+        
+        # Split time_and_day into separate day and time
+        if "," in time_and_day:
+            day, time = map(str.strip, time_and_day.split(",", 1))
         else:
-            return None
-            
-        # Extract description
-        description = ""
-        for sibling in p_tag.stripped_strings:
-            if (sibling not in time_and_day and 
-                sibling not in instructor and 
-                sibling not in location):
-                description += f"{sibling} "
-                
-        description = ' '.join(description.split())
-        
-        # Clean all fields
-        time_and_day = self._clean_text(time_and_day)
-        instructor = self._clean_text(instructor)
-        location = self._clean_text(location)
-        
-        # Clean description by removing redundant text
-        if time_and_day:
-            description = description.replace(time_and_day, '').strip()
-        if instructor:
-            description = description.replace(f"Instructor: {instructor}", '').strip()
-        if location:
-            description = description.replace(f"Location: {location}", '').strip()
-        description = self._clean_text(description)
-        
-        # Split time_and_day into day and time
-        day = time_and_day
-        time = ""
-        if ',' in time_and_day:
-            day, time = time_and_day.split(',', 1)
-            day = day.strip()
-            time = time.strip()
-            
+            day, time = time_and_day, ""
+
         return {
             'Day': day,
             'Time': time,
@@ -229,7 +230,8 @@ class RecreationScraper:
             'Location': location,
             'Description': description
         }
-    
+
+
     def scrape_classes(self):
         """Scrape group fitness classes dynamically from structured HTML and save to JSON file."""
         soup = self._make_request(CLASSES_URL)
@@ -263,35 +265,11 @@ class RecreationScraper:
                 if not p_tag:
                     continue
 
-                # Extract time, instructor, and location details
-                details = p_tag.find_all('strong')
-                time_and_day, instructor, location = None, None, None
+                # Extract class details using the helper function
+                class_details = self._extract_class_details(p_tag)
+                class_details['Class Name'] = class_name  # Add class name to the extracted details
 
-                if len(details) >= 3:
-                    time_and_day = details[0].text.strip()
-                    instructor = details[1].text.strip().replace('Instructor: ', '')
-                    location = details[2].text.strip().replace('Location: ', '')
-                
-                # Extract description (remaining text in <p>)
-                description = p_tag.get_text(" ", strip=True)
-                description = description.replace(time_and_day, '').replace(instructor, '').replace(location, '').strip()
-                
-                # Split time_and_day into separate day and time
-                if time_and_day and ',' in time_and_day:
-                    day, time = map(str.strip, time_and_day.split(',', 1))
-                else:
-                    day, time = time_and_day, ""
-
-                # Store class data
-                class_info = {
-                    'Class Name': class_name,
-                    'Day': day,
-                    'Time': time,
-                    'Instructor': instructor,
-                    'Location': location,
-                    'Description': description
-                }
-                classes.append(class_info)
+                classes.append(class_details)
 
             # Save to JSON
             schedule = {
@@ -304,6 +282,9 @@ class RecreationScraper:
         except Exception as e:
             logger.error(f"Error scraping classes: {e}")
             return False
+
+
+
 
 
 
