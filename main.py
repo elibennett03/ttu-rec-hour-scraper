@@ -128,7 +128,9 @@ class RecreationScraper:
         schedule = {
             "Building Hours": {},
             "Climbing Wall Hours": {},
-            "Pool and Sauna Hours": {}
+            "Pool and Sauna Hours": {},
+            "Outdoor Equipment Rental Desk": {},
+            
         }
 
         try:
@@ -157,6 +159,7 @@ class RecreationScraper:
                     schedule["Building Hours"][current_day] = process_time_column(columns[1].text)
                     schedule["Climbing Wall Hours"][current_day] = process_time_column(columns[2].text)
                     schedule["Pool and Sauna Hours"][current_day] = process_time_column(columns[3].text)
+                    schedule["Outdoor Equipment Rental Desk"][current_day] = process_time_column(columns[4].text)
 
             # Find update time information
             for p in soup.find_all('p'):

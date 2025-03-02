@@ -114,6 +114,39 @@
             ]
         ]
     },
+    "Outdoor Equipment Rental Desk": {
+        "Monday": [
+            [
+                "1600 - 2000"
+            ]
+        ],
+        "Tuesday": [
+            [
+                "1300 - 1800"
+            ]
+        ],
+        "Wednesday": [
+            [
+                "1600 - 2000"
+            ]
+        ],
+        "Thursday": [
+            [
+                "1600 - 2000"
+            ]
+        ],
+        "Friday": [
+            [
+                "1300 - 1800"
+            ]
+        ],
+        "Saturday": [
+            []
+        ],
+        "Sunday": [
+            []
+        ]
+    },
     "Updated Time": "Updated: 2/18/2025",
-    "Current Time": "2025-03-02 00:05:40"
+    "Current Time": "2025-03-02 07:57:05"
 }
