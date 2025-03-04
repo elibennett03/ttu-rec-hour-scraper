@@ -67,7 +67,7 @@ class TimeConverter:
         """
         # Handle 'CLOSED' directly
         if hours.upper() == "CLOSED":
-            return []
+            return ["Closed"]
 
         # Ensure proper spacing if times are concatenated (e.g., "6 AM - 11 AM3 PM - 9 PM")
         hours = re.sub(r'(?<=[APM])(?=\d)', ' ', hours)
@@ -79,6 +79,7 @@ class TimeConverter:
         for time_range in time_ranges:
             # Ensure valid format before splitting
             times = re.findall(r'\d{1,2} (?:AM|PM) - \d{1,2} (?:AM|PM)', time_range)
+            print(times)
             
             for time in times:
                 try:
@@ -150,7 +151,9 @@ class RecreationScraper:
                         formatted_times = []
                         for time in times:
                             try:
-                                formatted_times.append(TimeConverter.format_hours_to_int(time))
+                                # Unlike append(), which adds the entire iterable as a single element, extend() unpacks it and adds each element individually
+                                formatted_times.extend(TimeConverter.format_hours_to_int(time))
+                                
                             except ValueError:
                                 logger.warning(f"Unexpected time range format: {time}")
                                 continue
