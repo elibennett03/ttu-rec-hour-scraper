@@ -1,11 +1,5 @@
 {
     "Building Hours": {
-        "Saturday": [
-            "0900 - 2000"
-        ],
-        "Sunday": [
-            "1300 - 2200"
-        ],
         "Monday": [
             "0600 - 2300"
         ],
@@ -20,15 +14,15 @@
         ],
         "Friday": [
             "0600 - 2000"
+        ],
+        "Saturday": [
+            "0900 - 2000"
+        ],
+        "Sunday": [
+            "1300 - 2200"
         ]
     },
     "Climbing Wall Hours": {
-        "Saturday": [
-            "Closed"
-        ],
-        "Sunday": [
-            "1400 - 1800"
-        ],
         "Monday": [
             "1700 - 2100"
         ],
@@ -44,15 +38,15 @@
         ],
         "Friday": [
             "1400 - 1800"
+        ],
+        "Saturday": [
+            "Closed"
+        ],
+        "Sunday": [
+            "1400 - 1800"
         ]
     },
     "Pool and Sauna Hours": {
-        "Saturday": [
-            "0900 - 1500"
-        ],
-        "Sunday": [
-            "1300 - 1900"
-        ],
         "Monday": [
             "0600 - 1100",
             "1500 - 2100"
@@ -72,15 +66,15 @@
         "Friday": [
             "0600 - 1100",
             "1500 - 1800"
+        ],
+        "Saturday": [
+            "0900 - 1500"
+        ],
+        "Sunday": [
+            "1300 - 1900"
         ]
     },
     "Outdoor Equipment Rental Desk": {
-        "Saturday": [
-            "Closed"
-        ],
-        "Sunday": [
-            "Closed"
-        ],
         "Monday": [
             "1600 - 2000"
         ],
@@ -95,8 +89,14 @@
         ],
         "Friday": [
             "1300 - 1800"
+        ],
+        "Saturday": [
+            "Closed"
+        ],
+        "Sunday": [
+            "Closed"
         ]
     },
-    "Updated Time": "Updated: 2/18/2025",
-    "Current Time": "2025-04-08 00:05:14"
+    "Updated Time": "Updated: 4/8/2025",
+    "Current Time": "2025-04-09 00:05:21"
 }
