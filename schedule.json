@@ -1,12 +1,26 @@
 {
     "Building Hours": {
-        "Monday": [],
-        "Tuesday": [],
-        "Wednesday": [],
-        "Thursday": [],
-        "Friday": [],
-        "Saturday": [],
-        "Sunday": []
+        "Monday": [
+            "0600 - 2000"
+        ],
+        "Tuesday": [
+            "0600 - 2000"
+        ],
+        "Wednesday": [
+            "0600 - 2000"
+        ],
+        "Thursday": [
+            "0600 - 2000"
+        ],
+        "Friday": [
+            "0600 - 2000"
+        ],
+        "Saturday": [
+            "0900 - 1800"
+        ],
+        "Sunday": [
+            "1300 - 2000"
+        ]
     },
     "Climbing Wall Hours": {
         "Monday": [
@@ -63,6 +77,6 @@
             "Closed"
         ]
     },
-    "Updated Time": "Updated: 5/8/2025",
-    "Current Time": "2025-05-12 00:06:11"
+    "Updated Time": "Updated: 5/12/2025",
+    "Current Time": "2025-05-13 00:06:02"
 }
