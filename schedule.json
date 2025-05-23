@@ -46,13 +46,27 @@
         ]
     },
     "Pool and Sauna Hours": {
-        "Monday": [],
-        "Tuesday": [],
-        "Wednesday": [],
-        "Thursday": [],
-        "Friday": [],
-        "Saturday": [],
-        "Sunday": []
+        "Monday": [
+            "0600 - 1100"
+        ],
+        "Tuesday": [
+            "0600 - 1100"
+        ],
+        "Wednesday": [
+            "0600 - 1100"
+        ],
+        "Thursday": [
+            "0600 - 1100"
+        ],
+        "Friday": [
+            "0600 - 1100"
+        ],
+        "Saturday": [
+            "Closed"
+        ],
+        "Sunday": [
+            "Closed"
+        ]
     },
     "Outdoor Equipment Rental Desk": {
         "Monday": [
@@ -78,5 +92,5 @@
         ]
     },
     "Updated Time": "Updated: 5/12/2025",
-    "Current Time": "2025-05-22 00:05:47"
+    "Current Time": "2025-05-23 00:05:46"
 }
