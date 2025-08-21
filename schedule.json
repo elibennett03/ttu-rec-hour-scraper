@@ -1,49 +1,35 @@
 {
     "Building Hours": {
         "Monday": [
-            "0600 - 2000"
+            "0600 - 2300"
         ],
         "Tuesday": [
-            "0600 - 2000"
+            "0600 - 2300"
         ],
         "Wednesday": [
-            "0600 - 2000"
+            "0600 - 2300"
         ],
         "Thursday": [
-            "0600 - 2000"
+            "0600 - 2300"
         ],
         "Friday": [
             "0600 - 2000"
         ],
         "Saturday": [
-            "0900 - 1800"
+            "0900 - 2000"
         ],
         "Sunday": [
-            "1300 - 2000"
+            "1300 - 2200"
         ]
     },
     "Climbing Wall Hours": {
-        "Monday": [
-            "1400 - 1800"
-        ],
-        "Tuesday": [
-            "1400 - 1800"
-        ],
-        "Wednesday": [
-            "1400 - 1800"
-        ],
-        "Thursday": [
-            "1400 - 1800"
-        ],
-        "Friday": [
-            "1400 - 1800"
-        ],
-        "Saturday": [
-            "Closed"
-        ],
-        "Sunday": [
-            "Closed"
-        ]
+        "Monday": [],
+        "Tuesday": [],
+        "Wednesday": [],
+        "Thursday": [],
+        "Friday": [],
+        "Saturday": [],
+        "Sunday": []
     },
     "Pool and Sauna Hours": {
         "Monday": [
@@ -62,35 +48,21 @@
             "0600 - 1100"
         ],
         "Saturday": [
-            "Closed"
+            "0900 - 1500"
         ],
         "Sunday": [
-            "Closed"
+            "1300 - 1900"
         ]
     },
     "Outdoor Equipment Rental Desk": {
-        "Monday": [
-            "1400 - 1800"
-        ],
-        "Tuesday": [
-            "1400 - 1800"
-        ],
-        "Wednesday": [
-            "1400 - 1800"
-        ],
-        "Thursday": [
-            "1400 - 1800"
-        ],
-        "Friday": [
-            "1400 - 1800"
-        ],
-        "Saturday": [
-            "Closed"
-        ],
-        "Sunday": [
-            "Closed"
-        ]
+        "Monday": [],
+        "Tuesday": [],
+        "Wednesday": [],
+        "Thursday": [],
+        "Friday": [],
+        "Saturday": [],
+        "Sunday": []
     },
-    "Updated Time": "Updated: 7/1/2025",
-    "Current Time": "2025-08-20 00:05:26"
+    "Updated Time": "Updated: 8/20/2025",
+    "Current Time": "2025-08-21 00:04:59"
 }
