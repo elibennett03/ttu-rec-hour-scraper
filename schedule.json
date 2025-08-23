@@ -23,13 +23,27 @@
         ]
     },
     "Climbing Wall Hours": {
-        "Monday": [],
-        "Tuesday": [],
-        "Wednesday": [],
-        "Thursday": [],
-        "Friday": [],
-        "Saturday": [],
-        "Sunday": []
+        "Monday": [
+            "1500 - 2000"
+        ],
+        "Tuesday": [
+            "1500 - 2000"
+        ],
+        "Wednesday": [
+            "1500 - 2000"
+        ],
+        "Thursday": [
+            "1500 - 2000"
+        ],
+        "Friday": [
+            "1400 - 1800"
+        ],
+        "Saturday": [
+            "1400 - 1800"
+        ],
+        "Sunday": [
+            "Closed"
+        ]
     },
     "Pool and Sauna Hours": {
         "Monday": [
@@ -63,6 +77,6 @@
         "Saturday": [],
         "Sunday": []
     },
-    "Updated Time": "Updated: 8/20/2025",
-    "Current Time": "2025-08-22 00:05:47"
+    "Updated Time": "Updated: 8/22/2025",
+    "Current Time": "2025-08-23 00:05:18"
 }
