@@ -5,8 +5,8 @@
             "Time": "",
             "Instructor": "",
             "Location": "",
-            "Description": "High intensity interval training. Short bursts of intense exercise with low intensity recovery periods. An efficient, effective, and fun form of cardio that boosts heart rate. All levels welcome.",
-            "Class Name": "HIIT"
+            "Description": "Synchronized steps, country beats, and zero need for a dance partner. No boots please.",
+            "Class Name": "Line Dancing"
         },
         {
             "Day": "",
@@ -21,25 +21,9 @@
             "Time": "",
             "Instructor": "",
             "Location": "",
-            "Description": "A group fitness experience on a stationary bike! Great for everyone, male, female, conditioned, deconditioned, because YOU control your pace and resistance.",
-            "Class Name": "Spin"
-        },
-        {
-            "Day": "",
-            "Time": "",
-            "Instructor": "",
-            "Location": "",
             "Description": "Move and have fun in the water to a variety of upbeat music for an invigorating workout. All fitness levels are welcome.",
             "Class Name": "Water Aerobics"
-        },
-        {
-            "Day": "",
-            "Time": "",
-            "Instructor": "",
-            "Location": "",
-            "Description": "A high-energy dance fitness program that combines Latin and international music with easy-to-follow dance moves. A great way to get in shape while having fun!",
-            "Class Name": "Dance Aerobics"
         }
     ],
-    "Current Time": "2025-09-04 00:05:06"
+    "Current Time": "2025-09-05 00:05:14"
 }
