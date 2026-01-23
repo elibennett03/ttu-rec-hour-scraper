@@ -6,7 +6,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Make a splash with this energizing, low-impact workout designed to improve strength, flexibility, and cardiovascular health! Using the natural resistance of water, this class delivers total-body conditioning that\u2019s gentle on the joints yet highly effective. Perfect for all fitness levels in a supportive, upbeat atmosphere.",
-            "Class Name": "AquaFit - Water Aerobics"
+            "Class Name": "Aqua Fit - Water Aerobics"
         },
         {
             "Day": "",
@@ -22,7 +22,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Experience the ultimate low-impact, high-intensity workout with this class! This unique class combines the cardio benefits of cycling with the resistance of water for a joint-friendly, full-body challenge. Improve endurance, core stability, and boost your energy in a fun, refreshing environment suitable for all fitness levels.",
-            "Class Name": "AquaSpin"
+            "Class Name": "Aqua Spin"
         },
         {
             "Day": "",
@@ -30,7 +30,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Blast through your limits with this high intensity interval training class! TurboFit combines powerful cardio bursts with strength-building moves for a total-body challenge that boosts endurance, burns calories, and builds lean muscle. With motivating music and dynamic intervals, you\u2019ll leave feeling strong, energized, and unstoppable. Perfect for all fitness levels \u2013 just bring your drive and get ready to turbocharge your workout!",
-            "Class Name": "TurboFit"
+            "Class Name": "Turbo Fit"
         },
         {
             "Day": "",
@@ -38,7 +38,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Start your day strong with this energizing HIIT workout designed to wake up your body and mind! RevUp combines quick cardio bursts and strength intervals to maximize results in just 30 minutes. You\u2019ll leave feeling invigorated, focused, and ready to tackle the day ahead. All fitness levels welcome \u2013 kick off your morning with power and positivity!",
-            "Class Name": "RevUp"
+            "Class Name": "Rev Up"
         },
         {
             "Day": "",
@@ -49,5 +49,5 @@
             "Class Name": "Midday Mobility"
         }
     ],
-    "Current Time": "2026-01-22 00:06:26"
+    "Current Time": "2026-01-23 00:06:48"
 }
