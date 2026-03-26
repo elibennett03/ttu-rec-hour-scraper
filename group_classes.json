@@ -6,7 +6,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Make a splash with this energizing, low-impact workout designed to improve strength, flexibility, and cardiovascular health! Using the natural resistance of water, this class delivers total-body conditioning that\u2019s gentle on the joints yet highly effective. Perfect for all fitness levels in a supportive, upbeat atmosphere.",
-            "Class Name": "Aqua Fit - Water Aerobics"
+            "Class Name": "> Aqua Fit - Water Aerobics"
         },
         {
             "Day": "",
@@ -14,7 +14,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Experience the ultimate low-impact, high-intensity workout with this class! This unique class combines the cardio benefits of cycling with the resistance of water for a joint-friendly, full-body challenge. Improve endurance, core stability, and boost your energy in a fun, refreshing environment suitable for all fitness levels.",
-            "Class Name": "Aqua Spin"
+            "Class Name": "> Aqua Spin"
         },
         {
             "Day": "",
@@ -22,7 +22,15 @@
             "Instructor": "",
             "Location": "",
             "Description": "Break up your day with this 30-minute movement-focused class designed to improve flexibility, joint health, and overall range of motion. Through dynamic stretches, controlled mobility drills, and posture-enhancing exercises, you\u2019ll loosen tight muscles, reduce stiffness, and boost energy for the rest of your day. Perfect for all fitness levels, this express session helps you move better, feel better, and finish your day refreshed and ready.",
-            "Class Name": "Midday Mobility"
+            "Class Name": "> Midday Mobility"
+        },
+        {
+            "Day": "",
+            "Time": "",
+            "Instructor": "",
+            "Location": "",
+            "Description": "Step away from your day and reset with a slow, mindful yoga practice designed to release tension, improve mobility, and restore focus. This class emphasizes gentle movement, breathwork, and relaxation - perfect for all levels during a midday break.",
+            "Class Name": "Midday Reset - Yoga"
         },
         {
             "Day": "",
@@ -30,7 +38,7 @@
             "Instructor": "",
             "Location": "",
             "Description": "Start your day strong with this energizing HIIT workout designed to wake up your body and mind! Rev Up combines quick cardio bursts and strength intervals to maximize results in just 30 minutes. You\u2019ll leave feeling invigorated, focused, and ready to tackle the day ahead. All fitness levels welcome \u2013 kick off your morning with power and positivity!",
-            "Class Name": "Rev Up"
+            "Class Name": "> Rev Up"
         },
         {
             "Day": "",
@@ -38,7 +46,15 @@
             "Instructor": "",
             "Location": "",
             "Description": "Come experience group fitness with this indoor cycling class - an energetic, music-driven spin class that fuels your body and fires up your mood. This class is designed to boost cardiovascular fitness, strengthen your legs and core, and leave you feeling empowered. Whether you\u2019re a seasoned rider or new to the bike, Spin Surge delivers a fun, sweat-filled journey that will have you coming back for more!",
-            "Class Name": "Spin Surge"
+            "Class Name": "> Spin Surge"
+        },
+        {
+            "Day": "",
+            "Time": "",
+            "Instructor": "",
+            "Location": "",
+            "Description": "A high-energy fusion of kickboxing and strength training that delivers a powerful, full-body workout! Build strength, endurance, coordination, and confidence through dynamic combos and total-body conditioning in a fun, motivating class for all fitness levels.",
+            "Class Name": "> Strike Fit"
         },
         {
             "Day": "",
@@ -46,8 +62,8 @@
             "Instructor": "",
             "Location": "",
             "Description": "Blast through your limits with this high intensity interval training class! Turbo Fit combines powerful cardio bursts with strength-building moves for a total-body challenge that boosts endurance, burns calories, and builds lean muscle. With motivating music and dynamic intervals, you\u2019ll leave feeling strong, energized, and unstoppable. Perfect for all fitness levels \u2013 just bring your drive and get ready to turbocharge your workout!",
-            "Class Name": "Turbo Fit"
+            "Class Name": "> Turbo Fit"
         }
     ],
-    "Current Time": "2026-03-25 00:10:16"
+    "Current Time": "2026-03-26 00:12:07"
 }
